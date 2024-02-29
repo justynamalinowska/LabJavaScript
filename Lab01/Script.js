@@ -4,6 +4,10 @@
 //reagowanie na klikniecie
 const przeliczbtn = document.querySelector("#przelicz");
 przeliczbtn.addEventListener("click", licz);
+val1.addEventListener("input", licz);
+val2.addEventListener("input", licz);
+val3.addEventListener("input", licz);
+val4.addEventListener("input", licz);
 
 function licz() {
   const input1 = parseInt(document.querySelector("#val1").value);
