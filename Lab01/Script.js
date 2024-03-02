@@ -1,27 +1,57 @@
-//pobierz diva
-// const wyniki = document.querySelector('.wyniki').innerText = input1;
-
-//reagowanie na klikniecie
 const przeliczbtn = document.querySelector("#przelicz");
 przeliczbtn.addEventListener("click", licz);
-val1.addEventListener("input", licz);
-val2.addEventListener("input", licz);
-val3.addEventListener("input", licz);
-val4.addEventListener("input", licz);
+const dodajpolebtn = document.querySelector("#dodajPole");
+dodajpolebtn.addEventListener("click", dodajPole);
+// val1.addEventListener("input", licz);
+// val2.addEventListener("input", licz);
+// val3.addEventListener("input", licz);
+let numbers = document.querySelector("#numbers");
+
+let i = 3;
 
 function licz() {
-  const input1 = parseInt(document.querySelector("#val1").value);
-  const input2 = parseInt(document.querySelector("#val2").value);
-  const input3 = parseInt(document.querySelector("#val3").value);
-  const input4 = parseInt(document.querySelector("#val4").value);
+  let sum = 0;
+  let avg = 0;
+  let min = Infinity;
+  let max = -Infinity;
 
-  const sum = input1 + input2 + input3 + input4;
-  const avg = sum / 4;
-  const min = Math.min(input1, input2, input3, input4);
-  const max = Math.max(input1, input2, input3, input4);
+  for (let j = 1; j <= (numbers.childElementCount - 1) / 2; j++) {
+    const input = document.querySelector("#val" + j);
+    // console.log(i);
+    if (input.value == "" || isNaN(input.value)) {
+      numbers.removeChild(input);
+      numbers.removeChild(document.querySelector("#l" + j));
+      i = i - 1;
+    } else {
+      const inputVal = parseFloat(input.value);
+      input.addEventListener("input", licz);
+      sum += inputVal;
+      avg = sum / i;
+      if (inputVal < min) min = inputVal;
+      if (inputVal > max) max = inputVal;
+    }
+  }
 
-  document.getElementById("sum").value = sum;
-  document.getElementById("avg").value = avg;
-  document.getElementById("min").value = min;
-  document.getElementById("max").value = max;
+  document.querySelector("#sum").value = sum;
+  document.querySelector("#avg").value = avg;
+  document.querySelector("#min").value = min;
+  document.querySelector("#max").value = max;
+}
+
+function dodajPole() {
+  i = i + 1;
+  let input = document.createElement("input");
+  input.id = "val" + i;
+  input.type = "number";
+
+  let label = document.createElement("label");
+  label.innerHTML = "Liczba " + i + ":";
+  label.id = "l" + i;
+
+  numbers.insertBefore(label, numbers.lastElementChild);
+  numbers.insertBefore(input, numbers.lastElementChild);
+
+  //efElem.insertAdjacentElement(position, newElem)
+  // numbers.insertAdjacentElement("beforeend", label);
+  // numbers.insertAdjacentElement("beforeend", input);
 }

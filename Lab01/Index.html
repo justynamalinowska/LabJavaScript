@@ -6,25 +6,28 @@
     <title>Document</title>
   </head>
   <body>
-    <label>Liczba 1</label>
-    <input type="text" id="val1" />
-    <label>Liczba 2</label>
-    <input type="text" id="val2" />
-    <label>Liczba 3</label>
-    <input type="text" id="val3" />
-    <label>Liczba 4</label>
-    <input type="text" id="val4" />
-    <button id="przelicz">Przelicz</button>
-
+    <div id="numbers">
+      <label id="l1">Liczba 1:</label>
+      <input type="number" id="val1" />
+      <label id="l2">Liczba 2:</label>
+      <input type="number" id="val2" />
+      <label id="l3">Liczba 3:</label>
+      <input type="number" id="val3" />
+      <div class="last"></div>
+    </div>
+    <div>
+      <button id="przelicz">Przelicz</button>
+      <button id="dodajPole">Dodaj pole</button>
+    </div>
     <div>
       <label>Suma</label>
-      <input type="text" id="sum" />
+      <input type="text" id="sum" readonly />
       <label>Srednia</label>
-      <input type="text" id="avg" />
+      <input type="text" id="avg" readonly />
       <label>Min</label>
-      <input type="text" id="min" />
+      <input type="text" id="min" readonly />
       <label>Max</label>
-      <input type="text" id="max" />
+      <input type="text" id="max" readonly />
     </div>
 
     <script type="text/javascript" src="Script.js"></script>
