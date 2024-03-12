@@ -1,35 +1,44 @@
-const imgArray = new Array();
+const imgArray = [];
 
-const buttons = document.querySelector(".buttons");
+let number = 0;
+let intervalId;
 
-for (let i = 0; i < 5; i++) {
-  imgArray[i] = new Image();
-  imgArray[i].src = "Images/slajd" + i + ".jpeg";
-  const b = document.createElement("button");
-  b.id = "b" + i;
-  b.innerText = i;
-  //b.addEventListener("click", setSlide(i));
-  buttons.insertBefore(b, document.querySelector("#next"));
+const previous = document.querySelector("#previous");
+const next = document.querySelector("#next");
+const sliderInner = document.getElementById("slider-inner");
+
+previous.addEventListener("click", () => SetSlide(number - 1));
+next.addEventListener("click", () => SetSlide(number + 1));
+
+document.addEventListener("DOMContentLoaded", function () {
+  for (let i = 0; i < 5; i++) {
+    imgArray[i] = document.createElement("img");
+    imgArray[i].src = "Images/slajd" + i + ".jpeg";
+
+    document
+      .getElementById("b" + i)
+      .addEventListener("click", () => SetSlide(i));
+  }
+
+  SetSlide(0);
+});
+
+let positionX = 0;
+
+function SetSlide(i) {
+  if (i > imgArray.length - 1) number = 0;
+  else if (i < 0) number = 4;
+  else number = i;
+
+  sliderInner.style.transform = `translateX(${
+    -sliderInner.clientWidth * number
+  }px)`;
+
+  clearInterval(intervalId);
+  intervalId = setInterval(ChangeSlide, 4000);
 }
 
-//setTimeout(), setInterval()
-
-// setTimeout(() => {
-//   console.log("Ouc");
-//   const box = document.querySelector("#slider-inner");
-//   box.style.transform = "transalte(100px, 0px)";
-// }, 2_000);
-
-// let positionX = 0;
-// setInterval(() => {
-//   const box = document.querySelector("#slider-inner");
-//   box.style.transform = `transalte(${positionX}px, 0px)`;
-// }, 16);
-
-// setTimeout(() => {
-//   clearInterval(anim);
-// }, 6_000);
-
-setSlide(i);
-{
+function ChangeSlide() {
+  number++;
+  SetSlide(number);
 }
