@@ -22,12 +22,14 @@ images.forEach((image) => {
       lightbox.removeChild(lightbox.firstChild);
     }
     lightbox.appendChild(img);
+    clearInterval(intervalId);
   });
 });
 
 lightbox.addEventListener("click", (e) => {
   if (e.target != e.currentTarget) return;
   lightbox.classList.remove("active");
+  intervalId = setInterval(ChangeSlide, 4000);
 });
 
 previous.addEventListener("click", () => SetSlide(number - 1));
