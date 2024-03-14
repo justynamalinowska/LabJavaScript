@@ -2,10 +2,33 @@ const imgArray = [];
 
 let number = 0;
 let intervalId;
+let timeId;
 
 const previous = document.querySelector("#previous");
 const next = document.querySelector("#next");
 const sliderInner = document.getElementById("slider-inner");
+
+const lightbox = document.createElement("div");
+lightbox.id = "lightbox";
+document.body.appendChild(lightbox);
+const images = document.querySelectorAll("img");
+
+images.forEach((image) => {
+  image.addEventListener("click", () => {
+    lightbox.classList.add("active");
+    const img = document.createElement("img");
+    img.src = image.src;
+    while (lightbox.firstChild) {
+      lightbox.removeChild(lightbox.firstChild);
+    }
+    lightbox.appendChild(img);
+  });
+});
+
+lightbox.addEventListener("click", (e) => {
+  if (e.target != e.currentTarget) return;
+  lightbox.classList.remove("active");
+});
 
 previous.addEventListener("click", () => SetSlide(number - 1));
 next.addEventListener("click", () => SetSlide(number + 1));
@@ -33,9 +56,12 @@ function SetSlide(i) {
   sliderInner.style.transform = `translateX(${
     -sliderInner.clientWidth * number
   }px)`;
-
   clearInterval(intervalId);
+  clearTimeout(timeId);
   intervalId = setInterval(ChangeSlide, 4000);
+  timeId = setTimeout(() => {
+    document.querySelector("#b" + number).style.opacity = "0.9";
+  }, 4000);
 }
 
 function ChangeSlide() {
