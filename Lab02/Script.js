@@ -13,6 +13,11 @@ lightbox.id = "lightbox";
 document.body.appendChild(lightbox);
 const images = document.querySelectorAll("img");
 
+// previous.addEventListener(
+//   "mouseover",
+//   () => (document.querySelector("#previousSpan").style.display = "inline")
+// );
+
 images.forEach((image) => {
   image.addEventListener("click", () => {
     lightbox.classList.add("active");

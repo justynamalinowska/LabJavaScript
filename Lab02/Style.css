@@ -1,41 +1,74 @@
 body {
   color: rgb(219, 219, 219);
-  font-size: 18px;
+  font-size: 24px;
 }
 
 button {
   cursor: pointer;
-  border-radius: 60%;
-  background-color: aliceblue;
-}
-button {
+  background-color: #757b80;
+  color: aliceblue;
+  margin: 0, 5px;
+  min-height: 10px;
+  min-width: 10px;
+  padding: 4px;
+  border: none;
+  align-items: flex-end;
   margin: 0 auto;
   text-align: center;
   text-transform: uppercase;
   border-radius: 8px;
   padding: 4px;
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 button:hover {
   opacity: 0.8;
 }
-#previous {
-  position: absolute;
-  left: 1%;
-  top: 50%;
-  /* z-index: 3; */
-}
+
+#previous,
 #next {
   position: absolute;
-  right: 1%;
   top: 50%;
+  height: 28px;
+  width: 20px;
+  display: flex;
+  justify-content: space-between;
+  overflow: hidden;
+  transition: width 0.9s ease;
+}
+
+#next {
+  right: 1%;
+}
+
+#previous {
+  left: 1%;
+}
+
+#previous:hover {
+  width: 100px;
+}
+
+#next:hover {
+  width: 80px;
+}
+
+#nextSpan,
+#previousSpan {
+  display: none;
+}
+
+#previous:hover span,
+#next:hover span {
+  display: inline;
 }
 
 #buttons {
   position: absolute;
   bottom: 1%;
-  left: 48%;
+  left: 45%;
+  color: rgb(255, 255, 255);
+  font-size: 90px;
 }
 
 .slider {
@@ -70,7 +103,7 @@ button:hover {
   top: 0;
   height: 100%;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.33);
+  background-color: rgba(0, 0, 0, 0.6);
   display: none;
 }
 
@@ -85,5 +118,4 @@ button:hover {
   max-height: 90%;
   padding: 3px;
   background-color: black;
-  border: 2px solid white;
 }

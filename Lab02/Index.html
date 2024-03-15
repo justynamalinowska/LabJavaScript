@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="Style.css" type="text/css" />
+    <script
+      src="https://kit.fontawesome.com/408125e475.js"
+      crossorigin="anonymous"
+    ></script>
     <title>Document</title>
   </head>
   <body>
@@ -15,7 +19,10 @@
         <img id="slajd3" src="Images/slajd3.jpeg" alt="Slide3" />
         <img id="slajd4" src="Images/slajd4.jpeg" alt="Slide4" />
       </div>
-      <button id="previous">Previous</button>
+      <button id="previous">
+        <i class="fa-solid fa-arrow-left"></i>
+        <span id="previousSpan">Previous</span>
+      </button>
       <div id="buttons">
         <button id="b0"></button>
         <button id="b1"></button>
@@ -23,9 +30,14 @@
         <button id="b3"></button>
         <button id="b4"></button>
       </div>
-      <button id="next">Next</button>
+      <button id="next">
+        <span id="nextSpan">Next</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
     </div>
 
     <script type="text/javascript" src="Script.js"></script>
   </body>
 </html>
+
+<!-- <button id="b0"></button> -->
