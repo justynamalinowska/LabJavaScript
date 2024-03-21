@@ -9,17 +9,53 @@ const tink = document.querySelector("#s8");
 const tom = document.querySelector("#s9");
 
 let stopClicked = false;
+let recordingMode = false;
 
-for (let i = 1; i < 5; i++) {
-  document.querySelector("#start" + i).addEventListener("click", function () {
-    Save(i);
-  });
-}
+document.addEventListener("keypress", function (ev) {
+  if (!recordingMode) {
+    const key = ev.key;
+    const sound = sounds[key];
+    if (sound) {
+      sound.currentTime = 0;
+      sound.play();
+    }
+  }
+});
 
-const recording1 = [];
-const recording2 = [];
-const recording3 = [];
-const recording4 = [];
+document.querySelector("#start1").addEventListener("click", function () {
+  stopClicked = false;
+  recordingMode = true;
+  console.log("Recording started for #1");
+  Save(1);
+});
+
+document.querySelector("#start2").addEventListener("click", function () {
+  stopClicked = false;
+  recordingMode = true;
+  console.log("Recording started for #1");
+  Save(2);
+});
+
+document.querySelector("#start3").addEventListener("click", function () {
+  stopClicked = false;
+  recordingMode = true;
+  console.log("Recording started for #1");
+  Save(3);
+});
+
+document.querySelector("#start4").addEventListener("click", function () {
+  stopClicked = false;
+  recordingMode = true;
+  console.log("Recording started for #1");
+  Save(4);
+});
+
+const recordings = {
+  1: [],
+  2: [],
+  3: [],
+  4: [],
+};
 
 const sounds = {
   a: document.querySelector("#s1"),
@@ -33,46 +69,26 @@ const sounds = {
   c: document.querySelector("#s9"),
 };
 
-document.addEventListener("keypress", (ev) => {
-  const key = ev.key;
-  //   switch (key) {
-  //     case "a":
-  //       clap.currentTime = 0;
-  //       clap.play();
-  //       break;
-
-  //     case "b":
-  //       kick.currentTime = 0;
-  //       kick.play();
-  //       break;
-  //   }
-  const sound = sounds[key]; //tablica asocjacyjna
-  sound.currentTime = 0;
-  sound.play();
-});
-
 function Save(i) {
-  switch (i) {
-    case 1:
-      document
-        .querySelector("#stop" + i)
-        .addEventListener("click", function () {
-          stopClicked = true;
-        });
-      while (!stopClicked) {
-        recording1.push();
+  const stopButton = document.querySelector("#stop" + i);
+
+  stopButton.addEventListener("click", function () {
+    stopClicked = true;
+    recordingMode = false;
+    console.log("Recording stopped for #" + i);
+    console.log("Recording data:", recordings[i]);
+  });
+
+  document.addEventListener("keypress", function (ev) {
+    if (!stopClicked) {
+      const key = ev.key;
+      const sound = sounds[key];
+      if (sound) {
+        sound.currentTime = 0;
+        sound.play();
       }
-      break;
-    case 2:
-      break;
-
-    case 3:
-      break;
-
-    case 4:
-      break;
-
-    default:
-      break;
-  }
+      recordings[i].push(key);
+      console.log("Key pressed: " + key + " for #" + i);
+    }
+  });
 }
