@@ -16,7 +16,7 @@
 ### Wersja panda5:
 
 - Ilość kanałów jest dynamiczna (użytkownik może dodawać/kasować kanały)
-- Automat może pełnić rolę looper-a. Czyli odtwarzanie kanałów zostaje zapętlone. Pamiętaj że wtedy kanały muszą mieć równą długość (możesz przyjąć czas/takty na sztywno lub user może podać)
+- Automat może pełnić rolę looper-a. Czyli odtwarzanie kanałów zostaje zapętlone. Pamiętaj że wtedy kanały muszą mieć równą długość (możesz przyjąć czas/takty na sztywno lub user może podać) [TO DO]
 
 ### Przydatne
 
@@ -26,5 +26,3 @@
 #### Copyright
 
 - Dźwięki: https://99sounds.org/
-
-ktory klawisz klinkal za pomoca Key
