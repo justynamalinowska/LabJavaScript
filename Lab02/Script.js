@@ -13,11 +13,6 @@ lightbox.id = "lightbox";
 document.body.appendChild(lightbox);
 const images = document.querySelectorAll("img");
 
-// previous.addEventListener(
-//   "mouseover",
-//   () => (document.querySelector("#previousSpan").style.display = "inline")
-// );
-
 images.forEach((image) => {
   image.addEventListener("click", () => {
     lightbox.classList.add("active");
@@ -34,7 +29,7 @@ images.forEach((image) => {
 lightbox.addEventListener("click", (e) => {
   if (e.target != e.currentTarget) return;
   lightbox.classList.remove("active");
-  intervalId = setInterval(ChangeSlide, 4000);
+  // intervalId = setInterval(ChangeSlide, 4000);
 });
 
 previous.addEventListener("click", () => SetSlide(number - 1));
@@ -67,7 +62,8 @@ function SetSlide(i) {
   clearTimeout(timeId);
   intervalId = setInterval(ChangeSlide, 4000);
   timeId = setTimeout(() => {
-    document.querySelector("#b" + number).style.opacity = "0.9";
+    document.querySelector("#b" + number).style.opacity = "1";
+    document.querySelector("#b" + number).style.color = "#ced3d8;";
   }, 4000);
 }
 

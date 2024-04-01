@@ -5,7 +5,6 @@ body {
 
 button {
   cursor: pointer;
-  background-color: #757b80;
   color: aliceblue;
   margin: 0, 5px;
   min-height: 10px;
@@ -22,11 +21,12 @@ button {
 }
 
 button:hover {
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 #previous,
 #next {
+  background-color: #757b80;
   position: absolute;
   top: 50%;
   height: 28px;
@@ -67,8 +67,13 @@ button:hover {
   position: absolute;
   bottom: 1%;
   left: 45%;
-  color: rgb(255, 255, 255);
-  font-size: 90px;
+  font-size: 18px;
+  opacity: 0.7;
+}
+
+#buttons:hover {
+  color: #ced3d8;
+  opacity: 0.9;
 }
 
 .slider {
