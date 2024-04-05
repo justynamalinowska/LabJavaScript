@@ -25,21 +25,31 @@ const body = document.querySelector("body");
 let stopClicked = false;
 let recordingMode = false;
 let pauzaClicked = false;
-let looperClicked = false;
 let metronomClicked = false;
 let currentRecording;
 
 const recordings = [[], [], [], []];
 
 document.querySelector("#looper").addEventListener("click", function () {
-  looperClicked = !looperClicked;
+  let k = 1;
+  for (let i = 1; i <= numberOfCanals; i++) {
+    setTimeout(
+      (function (index) {
+        return function () {
+          playRecording(index);
+        };
+      })(k),
+      k * 800
+    );
+    k++;
+  }
 });
 
 document.querySelector("#metronom").addEventListener("click", function () {
   metronomClicked = !metronomClicked;
 });
 
-for (let i = 1; i < 5; i++) {
+for (let i = 1; i < 2; i++) {
   createCanal(i);
 }
 
@@ -63,7 +73,7 @@ document.addEventListener("keypress", function (ev) {
   }
 });
 
-let numberOfCanals = 4;
+let numberOfCanals = 1;
 document.querySelector("#add").addEventListener("click", function () {
   numberOfCanals++;
   createCanal(numberOfCanals);
@@ -77,8 +87,9 @@ function createCanal(i) {
   recordings.push([]);
   const div = document.createElement("div");
   div.id = "canal" + i;
-  body.insertBefore(div, document.querySelector("script"));
+  document.querySelector("#canals").appendChild(div);
   const p = document.createElement("p");
+  div.appendChild(p);
 
   p.innerText = "Canal " + i;
   p.id = "c" + i;
