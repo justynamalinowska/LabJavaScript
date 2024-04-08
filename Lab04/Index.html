@@ -7,6 +7,28 @@
     <title>Notes</title>
   </head>
   <body>
+    <div class="buttons">
+      <button id="openDialog">Create new note</button>
+      <button id="clearStorage">Delete all notes</button>
+    </div>
+
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <h2>Create Note</h2>
+        <form id="noteForm">
+          <label for="title">Title:</label><br />
+          <input type="text" id="title" name="title" /><br />
+          <label for="content">Content:</label><br />
+          <textarea id="content" name="content"></textarea><br />
+          <label for="colour">Colour:</label><br />
+          <input type="color" id="colour" name="colour" /><br />
+          <label for="pin">Pin:</label>
+          <input type="checkbox" id="pin" name="pin" /><br />
+          <button type="submit">Create</button>
+        </form>
+      </div>
+    </div>
+    <div id="notes"></div>
     <script type="text/javascript" src="Script.js"></script>
   </body>
 </html>
