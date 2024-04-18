@@ -1,13 +1,9 @@
 let colour = "#c2a2c8";
 let counter;
-
-//zapisac w localstorage tablice notatek
-
-// localStorage.clear();
+let pinnedNotesDiv = document.querySelector("#pinnedNotes");
 
 document.addEventListener("DOMContentLoaded", function () {
-  //counter
-  counter = localStorage.getItem("c") || 1; // Pobierz wartość counter z local storage lub ustaw domyślną wartość 0, jeśli nie istnieje
+  counter = localStorage.getItem("c") || 1;
   loadNotesFromLocalStorage();
   console.log("counter: " + counter);
 });
@@ -16,7 +12,7 @@ document.querySelector("#clearStorage").addEventListener("click", function () {
   localStorage.clear();
   counter = 0;
   localStorage.setItem("c", counter);
-  location.reload(); //render notes wlasna funkcja unikac odswiezania
+  location.reload();
 });
 
 const modal = document.querySelector("#myModal");
@@ -52,8 +48,8 @@ function loadNotesFromLocalStorage() {
 document.querySelector("#noteForm").addEventListener("submit", addNewNote);
 
 function addNewNote(event) {
-  event.preventDefault(); // Zatrzymaj domyślne działanie formularza
-  modal.style.display = "none"; // Ukryj okienko dialogowe
+  event.preventDefault();
+  modal.style.display = "none";
 
   const id = counter;
   const title = document.getElementById("title").value;
@@ -66,8 +62,6 @@ function addNewNote(event) {
   resetForm();
   counter++;
   localStorage.setItem("c", counter);
-
-  console.log(counter);
 }
 
 function createNote(id, title, content, colour, pin, date) {
@@ -81,21 +75,15 @@ function createNote(id, title, content, colour, pin, date) {
   };
 
   const noteDiv = document.createElement("div");
-  noteDiv.id = "noteDiv" + id; //zrobic to w style
+  noteDiv.id = "noteDiv" + id;
   noteDiv.style.backgroundColor = colour;
-  noteDiv.style.width = "300px";
-  noteDiv.style.height = "300px";
-  noteDiv.style.display = "inline-block";
-  noteDiv.style.position = "relative";
 
-  if (pin) {
-    const pinIcon = document.createElement("img");
-    pinIcon.className = "pin";
-    pinIcon.src = "pin.png";
-    noteDiv.appendChild(pinIcon);
-  }
+  const titleElement = document.createElement("h2");
+  titleElement.innerText = title;
 
-  noteDiv.innerHTML = `<h2>${title}</h2><p>${content}</p>`; //uwazac na <script>
+  const contentElement = document.createElement("p");
+  contentElement.innerText = content;
+
   const buttonsdiv = document.createElement("div");
   buttonsdiv.className = "deleteEditButtons";
 
@@ -111,7 +99,6 @@ function createNote(id, title, content, colour, pin, date) {
   edit.innerText = "Edit";
   edit.addEventListener("click", function () {
     editNote(id);
-    console.log(id);
   });
 
   buttonsdiv.appendChild(del);
@@ -120,18 +107,28 @@ function createNote(id, title, content, colour, pin, date) {
   if (!pin) {
     notes.appendChild(noteDiv);
   } else {
-    let pinnedNotesDiv = document.querySelector("#pinnedNotes");
+    const pinIcon = document.createElement("img");
+    pinIcon.className = "pin";
+    pinIcon.src = "pin.png";
+
+    const pinContainer = document.createElement("div");
+    pinContainer.appendChild(pinIcon);
+
+    noteDiv.appendChild(pinContainer);
+
     if (!pinnedNotesDiv) {
       pinnedNotesDiv = document.createElement("div");
       pinnedNotesDiv.id = "pinnedNotes";
-      notes.insertBefore(pinnedNotesDiv, notes.firstChild); // Dodanie diva pinnedNotes na początek diva notes
+      notes.parentNode.insertBefore(pinnedNotesDiv, notes.nextSibling);
     }
-    pinnedNotesDiv.appendChild(noteDiv);
+    pinnedNotesDiv.insertBefore(noteDiv, pinnedNotesDiv.firstChild);
   }
 
+  noteDiv.appendChild(titleElement);
+  noteDiv.appendChild(contentElement);
   noteDiv.appendChild(buttonsdiv);
 
-  localStorage.setItem("noteDiv" + id, JSON.stringify(noteData)); //przekazujemy do pamięci dane notatki
+  localStorage.setItem("noteDiv" + id, JSON.stringify(noteData));
 }
 
 function deleteNote(id) {
@@ -152,13 +149,10 @@ function editNote(id) {
   document.getElementById("colour").value = noteData.colour;
   document.getElementById("pin").checked = noteData.pin;
 
-  // Usuń starą notatkę z localStorage
   localStorage.removeItem("noteDiv" + id);
 
   const form = document.querySelector("#noteForm");
   form.removeEventListener("submit", addNewNote);
-
-  // Utwórz nowy event listener dla formularza edycji, który zaktualizuje notatkę
   form.addEventListener("submit", onEditSubmit);
 
   currentId = id;
@@ -170,27 +164,53 @@ function onEditSubmit(event) {
 }
 
 function handleEditSubmit(event, id, noteData) {
-  event.preventDefault(); // Zatrzymaj domyślne działanie formularza
+  event.preventDefault();
 
-  // Aktualizuj dane notatki
   noteData.title = document.getElementById("title").value;
   noteData.content = document.getElementById("content").value;
   noteData.colour = document.getElementById("colour").value;
   noteData.pin = document.getElementById("pin").checked;
   noteData.date = new Date();
 
-  // Zaktualizuj wyświetlaną notatkę
   const noteDiv = document.getElementById("noteDiv" + id);
   noteDiv.querySelector("h2").innerText = noteData.title;
   noteDiv.querySelector("p").innerText = noteData.content;
   noteDiv.style.backgroundColor = noteData.colour;
 
-  // Zaktualizuj notatkę w localStorage
-  localStorage.setItem("noteDiv" + id, JSON.stringify(noteData));
+  const existingPinIcon = noteDiv.querySelector(".pin");
 
+  if (existingPinIcon) {
+    existingPinIcon.parentNode.removeChild(existingPinIcon);
+    notes.removeChild(noteDiv);
+  }
+
+  if (noteData.pin) {
+    const pinIcon = document.createElement("img");
+    pinIcon.className = "pin";
+    pinIcon.src = "pin.png";
+
+    const pinContainer = document.createElement("div");
+    pinContainer.appendChild(pinIcon);
+
+    noteDiv.appendChild(pinContainer);
+
+    if (!pinnedNotesDiv) {
+      pinnedNotesDiv = document.createElement("div");
+      pinnedNotesDiv.id = "pinnedNotes";
+      notes.parentNode.insertBefore(pinnedNotesDiv, notes.nextSibling);
+    }
+    pinnedNotesDiv.insertBefore(noteDiv, pinnedNotesDiv.firstChild);
+  } else {
+    const existingPinIcon = noteDiv.querySelector(".pin");
+    if (existingPinIcon) {
+      existingPinIcon.parentNode.removeChild(existingPinIcon);
+    }
+    notes.appendChild(noteDiv);
+  }
+
+  localStorage.setItem("noteDiv" + id, JSON.stringify(noteData));
   modal.style.display = "none";
 
-  // Resetuj event listener dla formularza
   const form = document.querySelector("#noteForm");
   form.removeEventListener("submit", handleEditSubmit);
   form.addEventListener("submit", addNewNote);
