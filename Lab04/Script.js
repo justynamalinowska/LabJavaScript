@@ -86,6 +86,14 @@ function createNote(id, title, content, colour, pin, date) {
   noteDiv.style.width = "300px";
   noteDiv.style.height = "300px";
   noteDiv.style.display = "inline-block";
+  noteDiv.style.position = "relative";
+
+  if (pin) {
+    const pinIcon = document.createElement("img");
+    pinIcon.className = "pin";
+    pinIcon.src = "pin.png";
+    noteDiv.appendChild(pinIcon);
+  }
 
   noteDiv.innerHTML = `<h2>${title}</h2><p>${content}</p>`; //uwazac na <script>
   const buttonsdiv = document.createElement("div");
@@ -109,7 +117,17 @@ function createNote(id, title, content, colour, pin, date) {
   buttonsdiv.appendChild(del);
   buttonsdiv.appendChild(edit);
 
-  notes.appendChild(noteDiv);
+  if (!pin) {
+    notes.appendChild(noteDiv);
+  } else {
+    let pinnedNotesDiv = document.querySelector("#pinnedNotes");
+    if (!pinnedNotesDiv) {
+      pinnedNotesDiv = document.createElement("div");
+      pinnedNotesDiv.id = "pinnedNotes";
+      notes.insertBefore(pinnedNotesDiv, notes.firstChild); // Dodanie diva pinnedNotes na początek diva notes
+    }
+    pinnedNotesDiv.appendChild(noteDiv);
+  }
 
   noteDiv.appendChild(buttonsdiv);
 
