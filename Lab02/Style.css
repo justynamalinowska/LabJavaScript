@@ -124,3 +124,8 @@ button:hover {
   padding: 3px;
   background-color: black;
 }
+
+.highlighted {
+  opacity: 1;
+  color: #ced3d8;
+}

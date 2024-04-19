@@ -29,7 +29,7 @@ images.forEach((image) => {
 lightbox.addEventListener("click", (e) => {
   if (e.target != e.currentTarget) return;
   lightbox.classList.remove("active");
-  // intervalId = setInterval(ChangeSlide, 4000);
+  intervalId = setInterval(ChangeSlide, 4000);
 });
 
 previous.addEventListener("click", () => SetSlide(number - 1));
@@ -50,6 +50,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 let positionX = 0;
 
+intervalId = setInterval(ChangeSlide, 4000);
+
 function SetSlide(i) {
   if (i > imgArray.length - 1) number = 0;
   else if (i < 0) number = 4;
@@ -58,13 +60,13 @@ function SetSlide(i) {
   sliderInner.style.transform = `translateX(${
     -sliderInner.clientWidth * number
   }px)`;
-  clearInterval(intervalId);
-  clearTimeout(timeId);
-  intervalId = setInterval(ChangeSlide, 4000);
-  timeId = setTimeout(() => {
-    document.querySelector("#b" + number).style.opacity = "1";
-    document.querySelector("#b" + number).style.color = "#ced3d8;";
-  }, 4000);
+
+  clearTimeout(timeId); //zmienic nazwe
+  for (let j = 0; j < 5; j++) {
+    document.querySelector("#b" + j)?.classList.remove("highlighted");
+  }
+
+  document.querySelector("#b" + number).classList.add("highlighted");
 }
 
 function ChangeSlide() {
