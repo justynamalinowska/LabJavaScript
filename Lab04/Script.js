@@ -55,7 +55,7 @@ function addNewNote(event) {
   const title = document.getElementById("title").value;
   const content = document.getElementById("content").value;
   const colour = document.getElementById("colour").value;
-  const pin = document.getElementById("pin").checked;
+  const pin = false;
   const date = new Date();
 
   createNote(id, title, content, colour, pin, date);
@@ -104,30 +104,54 @@ function createNote(id, title, content, colour, pin, date) {
   buttonsdiv.appendChild(del);
   buttonsdiv.appendChild(edit);
 
-  if (!pin) {
-    notes.appendChild(noteDiv);
+  const pinIcon = document.createElement("img");
+  pinIcon.className = "pin";
+  if (pin) {
+    pinIcon.src = "unpin.png";
   } else {
-    const pinIcon = document.createElement("img");
-    pinIcon.className = "pin";
     pinIcon.src = "pin.png";
+  }
+  pinIcon.addEventListener("click", function () {
+    togglePin(id);
+  });
 
-    const pinContainer = document.createElement("div");
-    pinContainer.appendChild(pinIcon);
+  noteDiv.appendChild(pinIcon);
+  noteDiv.appendChild(titleElement);
+  noteDiv.appendChild(contentElement);
+  noteDiv.appendChild(buttonsdiv);
 
-    noteDiv.appendChild(pinContainer);
-
+  if (pin) {
     if (!pinnedNotesDiv) {
       pinnedNotesDiv = document.createElement("div");
       pinnedNotesDiv.id = "pinnedNotes";
       notes.parentNode.insertBefore(pinnedNotesDiv, notes.nextSibling);
     }
     pinnedNotesDiv.insertBefore(noteDiv, pinnedNotesDiv.firstChild);
+  } else {
+    notes.appendChild(noteDiv);
   }
 
-  noteDiv.appendChild(titleElement);
-  noteDiv.appendChild(contentElement);
-  noteDiv.appendChild(buttonsdiv);
+  localStorage.setItem("noteDiv" + id, JSON.stringify(noteData));
+}
 
+function togglePin(id) {
+  const noteData = JSON.parse(localStorage.getItem("noteDiv" + id));
+  noteData.pin = !noteData.pin;
+
+  const noteDiv = document.getElementById("noteDiv" + id);
+  const pinIcon = noteDiv.querySelector(".pin");
+  if (noteData.pin) {
+    pinIcon.src = "unpin.png";
+    if (!pinnedNotesDiv) {
+      pinnedNotesDiv = document.createElement("div");
+      pinnedNotesDiv.id = "pinnedNotes";
+      notes.parentNode.insertBefore(pinnedNotesDiv, notes.nextSibling);
+    }
+    pinnedNotesDiv.insertBefore(noteDiv, pinnedNotesDiv.firstChild);
+  } else {
+    pinIcon.src = "pin.png";
+    notes.appendChild(noteDiv);
+  }
   localStorage.setItem("noteDiv" + id, JSON.stringify(noteData));
 }
 
@@ -187,7 +211,7 @@ function handleEditSubmit(event, id, noteData) {
   if (noteData.pin) {
     const pinIcon = document.createElement("img");
     pinIcon.className = "pin";
-    pinIcon.src = "pin.png";
+    pinIcon.src = "unpin.png";
 
     const pinContainer = document.createElement("div");
     pinContainer.appendChild(pinIcon);

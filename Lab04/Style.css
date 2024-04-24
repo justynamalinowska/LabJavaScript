@@ -89,6 +89,12 @@ input {
   left: 8px;
   width: 30px;
   height: 30px;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.pin:hover {
+  opacity: 1;
 }
 
 #notes > :not(:first-child) {
