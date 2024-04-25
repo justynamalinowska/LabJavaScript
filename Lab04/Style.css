@@ -38,20 +38,22 @@ button:hover {
   padding: 20px;
   border: 1px solid #888;
   border-radius: 2%;
-  width: 400px;
-  height: 300px;
+  min-width: 550px;
+  min-height: 450px;
   text-align: center;
-  left: 38%;
-  top: 20%;
+  left: 34%;
+  top: 8%;
 }
 
 #noteForm button,
 textarea,
-input {
+input,
+label {
   margin-top: 10px;
 }
 #noteForm label {
   margin-top: 20px;
+  display: inline-block;
 }
 #notes {
   display: flex;
@@ -130,4 +132,19 @@ input {
 
 .selected {
   opacity: 1;
+}
+
+h2 {
+  margin-top: 40px;
+}
+
+#content {
+  min-height: 150px;
+  min-width: 300px;
+  border-radius: 3%;
+}
+
+#title {
+  min-width: 200px;
+  min-height: 20px;
 }

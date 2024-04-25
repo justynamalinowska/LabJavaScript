@@ -34,6 +34,7 @@ document
   .addEventListener("click", displayDialogWindow);
 
 function displayDialogWindow() {
+  resetForm();
   modal.style.display = "block";
 }
 
@@ -71,7 +72,6 @@ function getTags() {
 
 function addNewNote(event) {
   event.preventDefault();
-  modal.style.display = "none";
 
   const id = counter;
   const title = document.getElementById("title").value;
@@ -82,8 +82,9 @@ function addNewNote(event) {
   const tags = getTags();
 
   createNote(id, title, content, colour, pin, date, tags);
-  resetForm();
+  // resetForm();
   counter++;
+  modal.style.display = "none";
   localStorage.setItem("c", counter);
 }
 
@@ -108,13 +109,13 @@ function createNote(id, title, content, colour, pin, date, tags) {
   const contentElement = document.createElement("p");
   contentElement.innerText = content;
 
-  const tagsElement = document.createElement("div");
-  tagsElement.className = "tags";
-  tags.forEach((tag) => {
-    const tagSpan = document.createElement("span");
-    tagSpan.innerText = tag;
-    tagsElement.appendChild(tagSpan);
-  });
+  // const tagsElement = document.createElement("div");
+  // tagsElement.className = "tags";
+  // tags.forEach((tag) => {
+  //   const tagSpan = document.createElement("span");
+  //   tagSpan.innerText = tag;
+  //   tagsElement.appendChild(tagSpan);
+  // });
 
   const buttonsdiv = document.createElement("div");
   buttonsdiv.className = "deleteEditButtons";
@@ -151,7 +152,7 @@ function createNote(id, title, content, colour, pin, date, tags) {
     pinIcon,
     titleElement,
     contentElement,
-    tagsElement,
+    // tagsElement,
     buttonsdiv
   );
 
@@ -246,4 +247,7 @@ function resetForm() {
   document.getElementById("title").value = "";
   document.getElementById("content").value = "";
   document.getElementById("colour").value = colour;
+  tagButton.forEach((button) => {
+    button.classList.remove("selected");
+  });
 }
