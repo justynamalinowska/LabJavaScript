@@ -1,11 +1,24 @@
 let colour = "#c2a2c8";
 let counter;
 let pinnedNotesDiv = document.querySelector("#pinnedNotes");
+const notes = document.querySelector("#notes");
+const tagButton = document.querySelectorAll(".tagButton");
 
 document.addEventListener("DOMContentLoaded", function () {
   counter = localStorage.getItem("c") || 1;
   loadNotesFromLocalStorage();
   console.log("counter: " + counter);
+
+  tagButton.forEach((button) => {
+    button.addEventListener("click", () => {
+      const isSelected = button.classList.contains("selected");
+      if (!isSelected) {
+        button.classList.add("selected");
+      } else {
+        button.classList.remove("selected");
+      }
+    });
+  });
 });
 
 document.querySelector("#clearStorage").addEventListener("click", function () {
@@ -24,8 +37,6 @@ function displayDialogWindow() {
   modal.style.display = "block";
 }
 
-const notes = document.querySelector("#notes");
-
 function loadNotesFromLocalStorage() {
   const length = counter;
   if (length) {
@@ -38,7 +49,8 @@ function loadNotesFromLocalStorage() {
           noteData.content,
           noteData.colour,
           noteData.pin,
-          noteData.date
+          noteData.date,
+          noteData.tags
         );
       }
     }
@@ -46,6 +58,16 @@ function loadNotesFromLocalStorage() {
 }
 
 document.querySelector("#noteForm").addEventListener("submit", addNewNote);
+
+function getTags() {
+  const tags = [];
+  tagButton.forEach((button) => {
+    if (button.classList.contains("selected")) {
+      tags.push(button.innerText);
+    }
+  });
+  return tags;
+}
 
 function addNewNote(event) {
   event.preventDefault();
@@ -57,14 +79,15 @@ function addNewNote(event) {
   const colour = document.getElementById("colour").value;
   const pin = false;
   const date = new Date();
+  const tags = getTags();
 
-  createNote(id, title, content, colour, pin, date);
+  createNote(id, title, content, colour, pin, date, tags);
   resetForm();
   counter++;
   localStorage.setItem("c", counter);
 }
 
-function createNote(id, title, content, colour, pin, date) {
+function createNote(id, title, content, colour, pin, date, tags) {
   const noteData = {
     id: id,
     title: title,
@@ -72,6 +95,7 @@ function createNote(id, title, content, colour, pin, date) {
     colour: colour,
     pin: pin,
     date: date,
+    tags: tags,
   };
 
   const noteDiv = document.createElement("div");
@@ -83,6 +107,14 @@ function createNote(id, title, content, colour, pin, date) {
 
   const contentElement = document.createElement("p");
   contentElement.innerText = content;
+
+  const tagsElement = document.createElement("div");
+  tagsElement.className = "tags";
+  tags.forEach((tag) => {
+    const tagSpan = document.createElement("span");
+    tagSpan.innerText = tag;
+    tagsElement.appendChild(tagSpan);
+  });
 
   const buttonsdiv = document.createElement("div");
   buttonsdiv.className = "deleteEditButtons";
@@ -115,10 +147,13 @@ function createNote(id, title, content, colour, pin, date) {
     togglePin(id);
   });
 
-  noteDiv.appendChild(pinIcon);
-  noteDiv.appendChild(titleElement);
-  noteDiv.appendChild(contentElement);
-  noteDiv.appendChild(buttonsdiv);
+  noteDiv.append(
+    pinIcon,
+    titleElement,
+    contentElement,
+    tagsElement,
+    buttonsdiv
+  );
 
   if (pin) {
     if (!pinnedNotesDiv) {
@@ -126,7 +161,7 @@ function createNote(id, title, content, colour, pin, date) {
       pinnedNotesDiv.id = "pinnedNotes";
       notes.parentNode.insertBefore(pinnedNotesDiv, notes.nextSibling);
     }
-    pinnedNotesDiv.insertBefore(noteDiv, pinnedNotesDiv.firstChild);
+    pinnedNotesDiv.insertBefore(noteDiv, pinnedNotesDiv.firstElementChild);
   } else {
     notes.appendChild(noteDiv);
   }
@@ -147,7 +182,7 @@ function togglePin(id) {
       pinnedNotesDiv.id = "pinnedNotes";
       notes.parentNode.insertBefore(pinnedNotesDiv, notes.nextSibling);
     }
-    pinnedNotesDiv.insertBefore(noteDiv, pinnedNotesDiv.firstChild);
+    pinnedNotesDiv.insertBefore(noteDiv, pinnedNotesDiv.firstElementChild);
   } else {
     pinIcon.src = "pin.png";
     notes.appendChild(noteDiv);
@@ -171,7 +206,6 @@ function editNote(id) {
   document.getElementById("title").value = noteData.title;
   document.getElementById("content").value = noteData.content;
   document.getElementById("colour").value = noteData.colour;
-  document.getElementById("pin").checked = noteData.pin;
 
   localStorage.removeItem("noteDiv" + id);
 
@@ -193,44 +227,12 @@ function handleEditSubmit(event, id, noteData) {
   noteData.title = document.getElementById("title").value;
   noteData.content = document.getElementById("content").value;
   noteData.colour = document.getElementById("colour").value;
-  noteData.pin = document.getElementById("pin").checked;
   noteData.date = new Date();
 
   const noteDiv = document.getElementById("noteDiv" + id);
   noteDiv.querySelector("h2").innerText = noteData.title;
   noteDiv.querySelector("p").innerText = noteData.content;
   noteDiv.style.backgroundColor = noteData.colour;
-
-  const existingPinIcon = noteDiv.querySelector(".pin");
-
-  if (existingPinIcon) {
-    existingPinIcon.parentNode.removeChild(existingPinIcon);
-    notes.removeChild(noteDiv);
-  }
-
-  if (noteData.pin) {
-    const pinIcon = document.createElement("img");
-    pinIcon.className = "pin";
-    pinIcon.src = "unpin.png";
-
-    const pinContainer = document.createElement("div");
-    pinContainer.appendChild(pinIcon);
-
-    noteDiv.appendChild(pinContainer);
-
-    if (!pinnedNotesDiv) {
-      pinnedNotesDiv = document.createElement("div");
-      pinnedNotesDiv.id = "pinnedNotes";
-      notes.parentNode.insertBefore(pinnedNotesDiv, notes.nextSibling);
-    }
-    pinnedNotesDiv.insertBefore(noteDiv, pinnedNotesDiv.firstChild);
-  } else {
-    const existingPinIcon = noteDiv.querySelector(".pin");
-    if (existingPinIcon) {
-      existingPinIcon.parentNode.removeChild(existingPinIcon);
-    }
-    notes.appendChild(noteDiv);
-  }
 
   localStorage.setItem("noteDiv" + id, JSON.stringify(noteData));
   modal.style.display = "none";
@@ -244,5 +246,4 @@ function resetForm() {
   document.getElementById("title").value = "";
   document.getElementById("content").value = "";
   document.getElementById("colour").value = colour;
-  document.getElementById("pin").checked = false;
 }
