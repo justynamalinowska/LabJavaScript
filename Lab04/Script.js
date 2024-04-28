@@ -109,13 +109,13 @@ function createNote(id, title, content, colour, pin, date, tags) {
   const contentElement = document.createElement("p");
   contentElement.innerText = content;
 
-  // const tagsElement = document.createElement("div");
-  // tagsElement.className = "tags";
-  // tags.forEach((tag) => {
-  //   const tagSpan = document.createElement("span");
-  //   tagSpan.innerText = tag;
-  //   tagsElement.appendChild(tagSpan);
-  // });
+  const tagsElement = document.createElement("div");
+  tagsElement.className = "tags";
+  tags.forEach((tag) => {
+    const tagSpan = document.createElement("span");
+    tagSpan.innerText = tag;
+    tagsElement.appendChild(tagSpan);
+  });
 
   const buttonsdiv = document.createElement("div");
   buttonsdiv.className = "deleteEditButtons";
@@ -152,7 +152,7 @@ function createNote(id, title, content, colour, pin, date, tags) {
     pinIcon,
     titleElement,
     contentElement,
-    // tagsElement,
+    tagsElement,
     buttonsdiv
   );
 
@@ -208,6 +208,16 @@ function editNote(id) {
   document.getElementById("content").value = noteData.content;
   document.getElementById("colour").value = noteData.colour;
 
+  for (let tag of noteData.tags) {
+    console.log(tag);
+    for (let button of tagButton) {
+      if (button.innerText == tag) {
+        button.classList.add("selected");
+        console.log("button " + button.innerText + " is selected");
+      }
+    }
+  }
+
   localStorage.removeItem("noteDiv" + id);
 
   const form = document.querySelector("#noteForm");
@@ -229,10 +239,22 @@ function handleEditSubmit(event, id, noteData) {
   noteData.content = document.getElementById("content").value;
   noteData.colour = document.getElementById("colour").value;
   noteData.date = new Date();
+  noteData.tags = getTags();
+
+  const tagsInStorage = noteData.tags;
 
   const noteDiv = document.getElementById("noteDiv" + id);
   noteDiv.querySelector("h2").innerText = noteData.title;
   noteDiv.querySelector("p").innerText = noteData.content;
+
+  const tagsElement = noteDiv.querySelector(".tags");
+  tagsElement.innerHTML = "";
+  noteData.tags.forEach((tag) => {
+    const tagSpan = document.createElement("span");
+    tagSpan.innerText = tag;
+    tagsElement.appendChild(tagSpan);
+  });
+
   noteDiv.style.backgroundColor = noteData.colour;
 
   localStorage.setItem("noteDiv" + id, JSON.stringify(noteData));
