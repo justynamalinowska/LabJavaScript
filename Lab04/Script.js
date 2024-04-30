@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+  initializeSearchBar();
 });
 
 document.querySelector("#clearStorage").addEventListener("click", function () {
@@ -102,6 +103,7 @@ function createNote(id, title, content, colour, pin, date, tags) {
   const noteDiv = document.createElement("div");
   noteDiv.id = "noteDiv" + id;
   noteDiv.style.backgroundColor = colour;
+  noteDiv.classList = "note";
 
   const titleElement = document.createElement("h2");
   titleElement.innerText = title;
@@ -114,6 +116,7 @@ function createNote(id, title, content, colour, pin, date, tags) {
   tags.forEach((tag) => {
     const tagSpan = document.createElement("span");
     tagSpan.innerText = tag;
+    tagSpan.classList = "tag";
     tagsElement.appendChild(tagSpan);
   });
 
@@ -271,5 +274,48 @@ function resetForm() {
   document.getElementById("colour").value = colour;
   tagButton.forEach((button) => {
     button.classList.remove("selected");
+  });
+}
+
+function initializeSearchBar() {
+  const tagSelect = document.getElementById("tagSelect");
+  const resetSearchBtn = document.getElementById("resetSearch");
+
+  tagSelect.addEventListener("change", function () {
+    const selectedTag = tagSelect.value;
+    filterNotesByTag(selectedTag);
+  });
+
+  resetSearchBtn.addEventListener("click", function () {
+    displayAllNotes();
+    tagSelect.value = "";
+  });
+}
+
+function filterNotesByTag(tag) {
+  const notes = document.querySelectorAll(".note");
+
+  notes.forEach((note) => {
+    const noteTags = note.querySelectorAll(".tag");
+    let containsTag = false;
+    noteTags.forEach((noteTag) => {
+      if (noteTag.innerText === tag) {
+        containsTag = true;
+      }
+    });
+
+    if (containsTag) {
+      note.style.display = "block";
+    } else {
+      note.style.display = "none";
+    }
+  });
+}
+
+function displayAllNotes() {
+  const notes = document.querySelectorAll(".note");
+
+  notes.forEach((note) => {
+    note.style.display = "block";
   });
 }
