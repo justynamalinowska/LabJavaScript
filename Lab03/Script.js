@@ -1,13 +1,4 @@
-// const boom = document.querySelector("#s1");
-// const clap = document.querySelector("#s2");
-// const hihat = document.querySelector("#s3");
-// const kick = document.querySelector("#s4");
-// const openhat = document.querySelector("#s5");
-// const ride = document.querySelector("#s6");
-// const snare = document.querySelector("#s7");
-// const tink = document.querySelector("#s8");
-// const tom = document.querySelector("#s9");
-
+//checkboxy do wybrania kanalow ktore maja grac
 const sounds = {
   a: document.querySelector("#s1"),
   s: document.querySelector("#s2"),
@@ -23,30 +14,15 @@ const sounds = {
 const body = document.querySelector("body");
 
 let stopClicked = false;
-let recordingMode = false;
 let pauzaClicked = false;
-let metronomClicked = false;
+let isMetronomActive = false;
+let isLooperActive = false;
 let currentRecording;
 
 const recordings = [[], [], [], []];
 
-document.querySelector("#looper").addEventListener("click", function () {
-  let k = 1;
-  for (let i = 1; i <= numberOfCanals; i++) {
-    setTimeout(
-      (function (index) {
-        return function () {
-          playRecording(index);
-        };
-      })(k),
-      k * 800
-    );
-    k++;
-  }
-});
-
 document.querySelector("#metronom").addEventListener("click", function () {
-  metronomClicked = !metronomClicked;
+  isMetronomActive = !isMetronomActive;
 });
 
 for (let i = 1; i < 2; i++) {
@@ -54,20 +30,13 @@ for (let i = 1; i < 2; i++) {
 }
 
 document.addEventListener("keypress", function (ev) {
-  if (!recordingMode) {
-    const key = ev.key;
-    const sound = sounds[key];
-    if (sound) {
-      sound.currentTime = 0;
-      sound.play();
-    }
-  } else if (!stopClicked && recordingMode) {
-    const key = ev.key;
-    const sound = sounds[key];
-    if (sound) {
-      sound.currentTime = 0;
-      sound.play();
-    }
+  const key = ev.key;
+  const sound = sounds[key];
+  if (sound) {
+    sound.currentTime = 0;
+    sound.play();
+  }
+  if (!stopClicked) {
     recordings[currentRecording - 1].push(key);
     console.log("Key pressed: " + key + " for #" + currentRecording);
   }
@@ -93,6 +62,10 @@ function createCanal(i) {
 
   p.innerText = "Canal " + i;
   p.id = "c" + i;
+
+  const checkbox = document.createElement("input");
+  checkbox.setAttribute("type", "checkbox");
+  checkbox.id = "checkbox" + i;
 
   const b1 = document.createElement("button");
   b1.id = "play" + i;
@@ -131,18 +104,11 @@ function createCanal(i) {
     deleteCantal(i);
   });
 
-  div.append(p);
-  div.append(b1);
-  div.append(b2);
-  div.append(b3);
-  div.append(b4);
-  div.append(b5);
-  div.append(b6);
+  div.append(p, checkbox, b1, b2, b3, b4, b5, b6);
 }
 
 function startRecording(i) {
   stopClicked = false;
-  recordingMode = true;
   currentRecording = i;
   console.log("Recording started for #" + i);
   Save(i);
@@ -159,7 +125,7 @@ function Save(i) {
 
   stopButton.addEventListener("click", function () {
     stopClicked = true;
-    recordingMode = false;
+    // isRecording = false;
     console.log("Recording stopped for #" + i);
     console.log("Recording data:", recordings[i - 1]);
   });
@@ -169,10 +135,10 @@ function Save(i) {
   });
 }
 
-function playRecording(i) {
+async function playRecording(i) {
   console.log("Playing recording #" + i);
   let index = 0;
-  if (metronomClicked) {
+  if (isMetronomActive) {
     const interval = setInterval(function () {
       document.querySelector("#s4").currentTime = 0;
       document.querySelector("#s4").play();
@@ -204,4 +170,30 @@ function playRecording(i) {
       index++;
     }
   }
+}
+let intervalId;
+
+document.querySelector("#looper").addEventListener("click", function () {
+  isLooperActive = !isLooperActive;
+  if (isLooperActive) startLooping();
+  else stopLooping();
+});
+
+function startLooping() {
+  stopLooping();
+
+  intervalId = setInterval(async function () {
+    let promises = [];
+    for (let i = 1; i <= numberOfCanals; i++) {
+      const checkbox = document.querySelector("#checkbox" + i);
+      if (checkbox.checked) {
+        promises.push(playRecording(i));
+      }
+    }
+    await Promise.all(promises);
+  }, 800);
+}
+
+function stopLooping() {
+  clearInterval(intervalId);
 }
