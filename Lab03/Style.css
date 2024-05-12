@@ -1,6 +1,33 @@
 body {
   font-family: Arial, sans-serif;
-  background-color: #282c34;
+  background-image: linear-gradient(
+      45deg,
+      transparent 0%,
+      transparent 11%,
+      rgba(156, 156, 156, 0.06) 11%,
+      rgba(156, 156, 156, 0.06) 81%,
+      transparent 81%,
+      transparent 100%
+    ),
+    linear-gradient(
+      45deg,
+      transparent 0%,
+      transparent 18%,
+      rgba(156, 156, 156, 0.06) 18%,
+      rgba(156, 156, 156, 0.06) 64%,
+      transparent 64%,
+      transparent 100%
+    ),
+    linear-gradient(
+      135deg,
+      transparent 0%,
+      transparent 13%,
+      rgba(156, 156, 156, 0.06) 13%,
+      rgba(156, 156, 156, 0.06) 22%,
+      transparent 22%,
+      transparent 100%
+    ),
+    linear-gradient(90deg, rgb(0, 0, 0), rgb(0, 0, 0));
   color: white;
   margin: 0;
   padding: 0;
