@@ -39,7 +39,8 @@ window.addEventListener("DOMContentLoaded", function () {
     startNewGame();
   });
 
-  startButton.addEventListener("click", startAnimationLoop);
+  //   startButton.addEventListener("click", startAnimationLoop);
+  //   tryAgainButton.addEventListener("click", startAnimationLoop);
 });
 
 window.addEventListener("deviceorientation", handleOrientation);
@@ -50,11 +51,11 @@ function handleOrientation(event) {
 }
 
 function startNewGame() {
-  menu.classList.remove("hidden");
-  startTimer();
-
   points = 0;
   menuPoints.innerText = points;
+  menu.classList.remove("hidden");
+  startTimer();
+  startAnimationLoop();
   const gameContainer = document.getElementById("gameContainer");
   const containerRect = gameContainer.getBoundingClientRect();
   containerWidth = containerRect.width;
