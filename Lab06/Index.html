@@ -7,6 +7,11 @@
     <title>Ball in the hole</title>
   </head>
   <body>
+    <div id="menu">
+      <div id="timer"></div>
+      <div><p id="menuPoints">0</p></div>
+      <button id="endGame">End Game</button>
+    </div>
     <div id="gameContainer">
       <div class="hole"></div>
       <div class="ball"></div>
@@ -14,7 +19,7 @@
     <div id="startModal" class="modal">
       <div id="modalContent">
         <h2>Welcome!</h2>
-        <p>Click button below to begin!</p>
+        <p>Click the button below to begin!</p>
         <button id="startButton">Start</button>
       </div>
     </div>
@@ -22,6 +27,7 @@
       <div id="modalContent">
         <h2>The end!</h2>
         <p>Your time: <span id="time"></span></p>
+        <p>Points: <span id="summaryPoints"></span></p>
         <button id="tryAgainButton">Try again</button>
       </div>
     </div>
