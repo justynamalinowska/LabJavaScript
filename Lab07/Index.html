@@ -7,6 +7,23 @@
     <title>Weather</title>
   </head>
   <body>
+    <div class="buttons">
+      <button id="openDialog">Create new city</button>
+      <button id="clearStorage">Delete all cities</button>
+    </div>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <h2>City</h2>
+        <form id="cityForm">
+          <label for="city">City:</label><br />
+          <input type="text" id="city" name="city" /><br />
+          <button type="submit">Submit</button>
+          <button id="exit">Exit</button>
+        </form>
+        <div id="message"></div>
+      </div>
+    </div>
+    <div id="cities"></div>
     <script type="text/javascript" src="Script.js"></script>
   </body>
 </html>
