@@ -17,6 +17,7 @@ document.getElementById("openDialog").addEventListener("click", () => {
 
 document.getElementById("exit").addEventListener("click", function () {
   myModal.classList.remove("visible");
+  clearMessage();
 });
 
 document.getElementById("cityForm").addEventListener("submit", (event) => {
@@ -43,11 +44,12 @@ function addCity(city) {
   if (cities.includes(city)) {
     displayMessage("City already exists.");
     return;
+  } else {
+    cities.push(city);
+    localStorage.setItem("cities", JSON.stringify(cities));
+    fetchWeatherData(city);
+    clearMessage();
   }
-  cities.push(city);
-  localStorage.setItem("cities", JSON.stringify(cities));
-  fetchWeatherData(city);
-  clearMessage();
 }
 
 function fetchWeatherData(city) {
@@ -110,6 +112,7 @@ function loadWeatherData() {
 
 function displayMessage(message) {
   messageElement.innerText = message;
+  setTimeout(clearMessage, 1500);
 }
 
 function clearMessage() {
