@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="Style.css" type="text/css" />
+    <title>Canvas</title>
+  </head>
+  <body>
+    <div id="controls">
+      <label for="ballCount">Number of Balls:</label>
+      <input type="number" id="ballCount" value="10" min="1" />
+      <label for="distance">Distance:</label>
+      <input type="range" id="distance" min="0" max="800" value="160" />
+      <span id="distanceValue">160</span>
+      <label for="force">Repel/Attract Force:</label>
+      <input type="range" id="force" min="-10" max="10" value="0" />
+      <span id="forceValue">0</span>
+      <button id="startButton">Start</button>
+      <button id="resetButton">Reset</button>
+    </div>
+    <canvas id="canvas"></canvas>
+    <script type="text/javascript" src="Script.js"></script>
+  </body>
+</html>
