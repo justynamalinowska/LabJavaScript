@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="Style.css" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>Weather</title>
   </head>
   <body>
@@ -15,8 +16,9 @@
       <div class="modal-content">
         <h2>City</h2>
         <form id="cityForm">
-          <label for="city">City:</label><br />
-          <input type="text" id="city" name="city" /><br />
+          <label for="city">City:</label>
+          <input type="text" id="city" name="city" autocomplete="off" />
+          <div id="suggestions" class="suggestions"></div>
           <button type="submit">Submit</button>
           <button id="exit">Exit</button>
         </form>

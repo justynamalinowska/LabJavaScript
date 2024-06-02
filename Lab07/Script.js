@@ -11,6 +11,40 @@ document.addEventListener("DOMContentLoaded", function () {
   }, updateInterval);
 });
 
+document.getElementById("city").addEventListener("input", function () {
+  const query = this.value;
+  if (query.length > 2) {
+    fetch(
+      `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${apiKey}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        displaySuggestions(data);
+      })
+      .catch((error) =>
+        console.error("Error fetching city suggestions:", error)
+      );
+  }
+});
+
+function displaySuggestions(data) {
+  const suggestionContainer = document.getElementById("suggestions");
+  suggestionContainer.innerHTML = "";
+  data.forEach((city) => {
+    const suggestion = document.createElement("div");
+    suggestion.className = "suggestion";
+    const suggestionSpan = document.createElement("span");
+    suggestionSpan.className = "suggestion-span";
+    suggestionSpan.innerText = `${city.name}, ${city.country}`;
+    suggestion.addEventListener("click", () => {
+      document.getElementById("city").value = city.name;
+      suggestionContainer.innerHTML = "";
+    });
+    suggestionContainer.appendChild(suggestion);
+    suggestion.appendChild(suggestionSpan);
+  });
+}
+
 document.getElementById("openDialog").addEventListener("click", () => {
   myModal.classList.add("visible");
 });
