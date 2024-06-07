@@ -75,10 +75,11 @@ label {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  margin-top: 60px;
+  margin-top: 75px;
 }
 
-.buttons {
+.buttons,
+.searchBar {
   position: fixed;
   right: 2%;
   top: 4%;
@@ -181,3 +182,7 @@ h2 {
   z-index: 1000;
   display: inline-block;
 } */
+
+#searchBar input {
+  margin-top: auto;
+}

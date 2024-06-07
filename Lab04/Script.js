@@ -83,7 +83,6 @@ function addNewNote(event) {
   const tags = getTags();
 
   createNote(id, title, content, colour, pin, date, tags);
-  // resetForm();
   counter++;
   modal.style.display = "none";
   localStorage.setItem("c", counter);
@@ -212,11 +211,9 @@ function editNote(id) {
   document.getElementById("colour").value = noteData.colour;
 
   for (let tag of noteData.tags) {
-    console.log(tag);
     for (let button of tagButton) {
       if (button.innerText == tag) {
         button.classList.add("selected");
-        console.log("button " + button.innerText + " is selected");
       }
     }
   }
@@ -243,8 +240,6 @@ function handleEditSubmit(event, id, noteData) {
   noteData.colour = document.getElementById("colour").value;
   noteData.date = new Date();
   noteData.tags = getTags();
-
-  const tagsInStorage = noteData.tags;
 
   const noteDiv = document.getElementById("noteDiv" + id);
   noteDiv.querySelector("h2").innerText = noteData.title;
@@ -278,33 +273,34 @@ function resetForm() {
 }
 
 function initializeSearchBar() {
-  const tagSelect = document.getElementById("tagSelect");
-  const resetSearchBtn = document.getElementById("resetSearch");
+  const searchInput = document.querySelector("#searchInput");
+  const searchButton = document.querySelector("#searchButton");
+  const resetSearchBtn = document.querySelector("#resetSearch");
 
-  tagSelect.addEventListener("change", function () {
-    const selectedTag = tagSelect.value;
-    filterNotesByTag(selectedTag);
+  searchButton.addEventListener("click", function () {
+    const keyword = searchInput.value.toLowerCase();
+    filterNotesByKeyword(keyword);
   });
 
   resetSearchBtn.addEventListener("click", function () {
     displayAllNotes();
-    tagSelect.value = "";
+    searchInput.value = "";
   });
 }
 
-function filterNotesByTag(tag) {
+function filterNotesByKeyword(keyword) {
   const notes = document.querySelectorAll(".note");
 
   notes.forEach((note) => {
-    const noteTags = note.querySelectorAll(".tag");
-    let containsTag = false;
-    noteTags.forEach((noteTag) => {
-      if (noteTag.innerText === tag) {
-        containsTag = true;
-      }
-    });
+    const title = note.querySelector("h2").innerText.toLowerCase();
+    const content = note.querySelector("p").innerText.toLowerCase();
+    const span = note.querySelector("span").innerText.toLowerCase();
 
-    if (containsTag) {
+    if (
+      title.includes(keyword) ||
+      content.includes(keyword) ||
+      span.includes(keyword)
+    ) {
       note.style.display = "block";
     } else {
       note.style.display = "none";

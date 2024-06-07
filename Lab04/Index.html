@@ -4,18 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="Style.css" type="text/css" />
-    <!-- <a target="_blank" href="https://icons8.com/icon/16811/pin">Pin</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a> -->
     <title>Notes</title>
   </head>
   <body>
     <div class="buttons">
       <div id="searchBar">
-        <select id="tagSelect">
-          <option value="">Wybierz tag...</option>
-          <option value="WORK">WORK</option>
-          <option value="PERSONAL">PERSONAL</option>
-          <option value="URGENT">URGENT</option>
-        </select>
+        <input type="text" id="searchInput" placeholder="Search notes..." />
+        <button id="searchButton">Search</button>
         <button id="resetSearch">Reset</button>
       </div>
       <button id="openDialog">Create new note</button>
