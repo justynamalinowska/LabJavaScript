@@ -2,14 +2,14 @@ let colour = "#c2a2c8";
 let counter;
 let pinnedNotesDiv = document.querySelector("#pinnedNotes");
 const notes = document.querySelector("#notes");
-const tagButton = document.querySelectorAll(".tagButton");
+const tagButtons = document.querySelectorAll(".tagButton");
 
 document.addEventListener("DOMContentLoaded", function () {
   counter = localStorage.getItem("c") || 1;
   loadNotesFromLocalStorage();
   console.log("counter: " + counter);
 
-  tagButton.forEach((button) => {
+  tagButtons.forEach((button) => {
     button.addEventListener("click", () => {
       const isSelected = button.classList.contains("selected");
       if (!isSelected) {
@@ -52,7 +52,7 @@ function loadNotesFromLocalStorage() {
           noteData.colour,
           noteData.pin,
           noteData.date,
-          noteData.tags
+          noteData.tags || []
         );
       }
     }
@@ -63,7 +63,7 @@ document.querySelector("#noteForm").addEventListener("submit", addNewNote);
 
 function getTags() {
   const tags = [];
-  tagButton.forEach((button) => {
+  tagButtons.forEach((button) => {
     if (button.classList.contains("selected")) {
       tags.push(button.innerText);
     }
@@ -96,7 +96,7 @@ function createNote(id, title, content, colour, pin, date, tags) {
     colour: colour,
     pin: pin,
     date: date,
-    tags: tags,
+    tags: tags || [],
   };
 
   const noteDiv = document.createElement("div");
@@ -195,7 +195,10 @@ function togglePin(id) {
 
 function deleteNote(id) {
   localStorage.removeItem("noteDiv" + id);
-  notes.removeChild(document.querySelector("#noteDiv" + id));
+  const noteDiv = document.querySelector("#noteDiv" + id);
+  if (noteDiv) {
+    noteDiv.parentNode.removeChild(noteDiv);
+  }
 }
 
 let currentNoteData;
@@ -211,7 +214,7 @@ function editNote(id) {
   document.getElementById("colour").value = noteData.colour;
 
   for (let tag of noteData.tags) {
-    for (let button of tagButton) {
+    for (let button of tagButtons) {
       if (button.innerText == tag) {
         button.classList.add("selected");
       }
@@ -250,6 +253,7 @@ function handleEditSubmit(event, id, noteData) {
   noteData.tags.forEach((tag) => {
     const tagSpan = document.createElement("span");
     tagSpan.innerText = tag;
+    tagSpan.classList = "tag";
     tagsElement.appendChild(tagSpan);
   });
 
@@ -267,7 +271,7 @@ function resetForm() {
   document.getElementById("title").value = "";
   document.getElementById("content").value = "";
   document.getElementById("colour").value = colour;
-  tagButton.forEach((button) => {
+  tagButtons.forEach((button) => {
     button.classList.remove("selected");
   });
 }
@@ -294,12 +298,14 @@ function filterNotesByKeyword(keyword) {
   notes.forEach((note) => {
     const title = note.querySelector("h2").innerText.toLowerCase();
     const content = note.querySelector("p").innerText.toLowerCase();
-    const span = note.querySelector("span").innerText.toLowerCase();
+    const tags = Array.from(note.querySelectorAll(".tag")).map((tag) =>
+      tag.innerText.toLowerCase()
+    );
 
     if (
       title.includes(keyword) ||
       content.includes(keyword) ||
-      span.includes(keyword)
+      tags.some((tag) => tag.includes(keyword))
     ) {
       note.style.display = "block";
     } else {
