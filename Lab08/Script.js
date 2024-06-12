@@ -12,6 +12,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let balls = [];
   let animationFrameId;
+  let mouseX = 0;
+  let mouseY = 0;
+  let isMouseMoving = false;
 
   canvas.width = 800;
   canvas.height = 700;
@@ -45,6 +48,13 @@ document.addEventListener("DOMContentLoaded", () => {
         this.vy = -this.vy;
       }
     }
+
+    isClicked(mouseX, mouseY) {
+      const dx = this.x - mouseX;
+      const dy = this.y - mouseY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      return distance < this.radius * 2;
+    }
   }
 
   function distanceBetween(ball1, ball2) {
@@ -66,13 +76,17 @@ document.addEventListener("DOMContentLoaded", () => {
     balls = [];
     const ballCount = parseInt(ballCountInput.value);
     for (let i = 0; i < ballCount; i++) {
-      const radius = 5;
-      const x = Math.random() * (canvas.width - 2 * radius) + radius;
-      const y = Math.random() * (canvas.height - 2 * radius) + radius;
-      const vx = (Math.random() - 0.5) * 4;
-      const vy = (Math.random() - 0.5) * 4;
-      balls.push(new Ball(x, y, vx, vy, radius));
+      createRandomBall();
     }
+  }
+
+  function createRandomBall() {
+    const radius = 5;
+    const x = Math.random() * (canvas.width - 2 * radius) + radius;
+    const y = Math.random() * (canvas.height - 2 * radius) + radius;
+    const vx = (Math.random() - 0.5) * 4;
+    const vy = (Math.random() - 0.5) * 4;
+    balls.push(new Ball(x, y, vx, vy, radius));
   }
 
   function animate() {
@@ -92,6 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+    applyForce();
     animationFrameId = requestAnimationFrame(animate);
   }
 
@@ -117,38 +132,6 @@ document.addEventListener("DOMContentLoaded", () => {
     forceValue.textContent = forceInput.value;
   });
 
-  canvas.addEventListener("click", (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    const newBalls = [];
-    balls.forEach((ball) => {
-      const dist = distanceBetween(ball, { x: mouseX, y: mouseY });
-      if (dist < ball.radius) {
-        newBalls.push(
-          new Ball(
-            Math.random() * canvas.width,
-            Math.random() * canvas.height,
-            (Math.random() - 0.5) * 4,
-            (Math.random() - 0.5) * 4
-          ),
-          new Ball(
-            Math.random() * canvas.width,
-            Math.random() * canvas.height,
-            (Math.random() - 0.5) * 4,
-            (Math.random() - 0.5) * 4
-          )
-        );
-      } else {
-        newBalls.push(ball);
-      }
-    });
-    balls = newBalls;
-  });
-
-  let mouseX,
-    mouseY,
-    isMouseMoving = false;
   canvas.addEventListener("mousemove", (e) => {
     const rect = canvas.getBoundingClientRect();
     mouseX = e.clientX - rect.left;
@@ -160,6 +143,22 @@ document.addEventListener("DOMContentLoaded", () => {
     isMouseMoving = false;
   });
 
+  canvas.addEventListener("click", (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+
+    for (let i = 0; i < balls.length; i++) {
+      // TO DO
+      if (balls[i].isClicked(clickX, clickY)) {
+        balls.splice(i, 1);
+        createRandomBall();
+        createRandomBall();
+        break;
+      }
+    }
+  });
+
   function applyForce() {
     const force = parseFloat(forceInput.value);
     if (isMouseMoving && force !== 0) {
@@ -167,7 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const dx = ball.x - mouseX;
         const dy = ball.y - mouseY;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 100) {
+        if (dist < 150) {
           const angle = Math.atan2(dy, dx);
           ball.vx += (Math.cos(angle) * force) / dist;
           ball.vy += (Math.sin(angle) * force) / dist;
@@ -175,11 +174,4 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   }
-
-  function run() {
-    applyForce();
-    animate();
-  }
-
-  requestAnimationFrame(run);
 });
