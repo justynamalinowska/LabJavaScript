@@ -2,6 +2,7 @@ let startTime;
 let endTime;
 let gameTime;
 let points;
+const holesNumber = 5;
 
 const startModal = document.getElementById("startModal");
 const startButton = document.getElementById("startButton");
@@ -13,8 +14,8 @@ const menuPoints = document.getElementById("menuPoints");
 const summaryPoints = document.getElementById("summaryPoints");
 const menu = document.getElementById("menu");
 
-let holeX;
-let holeY;
+let holes = [];
+let currentHoleIndex;
 let ballX;
 let ballY;
 let ballSpeedX = 0;
@@ -38,9 +39,6 @@ window.addEventListener("DOMContentLoaded", function () {
     summaryModal.classList.remove("visible");
     startNewGame();
   });
-
-  //   startButton.addEventListener("click", startAnimationLoop);
-  //   tryAgainButton.addEventListener("click", startAnimationLoop);
 });
 
 window.addEventListener("deviceorientation", handleOrientation);
@@ -64,7 +62,14 @@ function startNewGame() {
 
   ballX = containerWidth / 2;
   ballY = containerHeight / 2;
+  clearHoles();
   randomizePositions();
+}
+
+function clearHoles() {
+  const gameContainer = document.getElementById("gameContainer");
+  const holeElements = gameContainer.querySelectorAll(".hole");
+  holeElements.forEach((hole) => hole.remove());
 }
 
 function startAnimationLoop() {
@@ -97,6 +102,41 @@ function randomizePositions() {
   randomizeBall();
 }
 
+function randomizeHole() {
+  holes = [];
+  currentHoleIndex = 0;
+  for (let i = 0; i < holesNumber; i++) {
+    let hole;
+    do {
+      hole = {
+        x: Math.random() * (containerWidth - 54) + 27,
+        y: Math.random() * (containerHeight - 54) + 27,
+      };
+    } while (
+      holes.some(
+        (h) => Math.abs(h.x - hole.x) < 54 && Math.abs(h.y - hole.y) < 54
+      )
+    );
+    holes.push(hole);
+    createHoleElement(hole, i + 1);
+  }
+}
+
+function createHoleElement(hole, number) {
+  let holeElement = document.createElement("div");
+  holeElement.classList.add("hole");
+  holeElement.id = "hole" + number;
+  holeElement.style.left = `${hole.x}px`;
+  holeElement.style.top = `${hole.y}px`;
+  let holeSpan = document.createElement("span");
+  holeSpan.classList.add("holeSpan");
+  holeSpan.innerText = number;
+  document
+    .getElementById("gameContainer")
+    .appendChild(holeElement)
+    .appendChild(holeSpan);
+}
+
 function endGame() {
   menu.classList.add("hidden");
   endTime = new Date();
@@ -111,43 +151,27 @@ function endGame() {
 
 function nextRound() {
   points++;
+  const holeToDelete = document.getElementById("hole" + points);
+  if (holeToDelete) holeToDelete.remove();
   menuPoints.innerText = points;
-  if (points >= 5) endGame();
+  if (points >= holesNumber) endGame();
   else {
-    randomizePositions();
+    currentHoleIndex++;
     requestAnimationFrame(update);
   }
 }
 
-function randomizeHole() {
-  do {
-    holeX = Math.random() * (containerWidth - 54) + 27;
-    holeY = Math.random() * (containerHeight - 54) + 27;
-  } while (holeX === ballX && holeY === ballY);
-
-  const holeElement = document.querySelector(".hole");
-  holeElement.style.left = `${holeX}px`;
-  holeElement.style.top = `${holeY}px`;
-}
-
 function randomizeBall() {
   const ballElement = document.querySelector(".ball");
-  if (points === 0) {
-    ballElement.style.top = "50%";
-    ballElement.style.left = "50%";
-  } else {
-    do {
-      ballX = Math.random() * (containerWidth - 54) + 27;
-      ballY = Math.random() * (containerHeight - 54) + 27;
-    } while (ballX === holeX && ballY === holeY);
-
-    ballElement.style.left = `${ballX}px`;
-    ballElement.style.top = `${ballY}px`;
-  }
+  ballX = Math.random() * (containerWidth - 54) + 27;
+  ballY = Math.random() * (containerHeight - 54) + 27;
+  ballElement.style.left = `${ballX}px`;
+  ballElement.style.top = `${ballY}px`;
 }
 
 function isBallInHole() {
-  return Math.abs(ballX - holeX) < 13 && Math.abs(ballY - holeY) < 13;
+  const hole = holes[currentHoleIndex];
+  return Math.abs(ballX - hole.x) < 13 && Math.abs(ballY - hole.y) < 13;
 }
 
 function updateTimer() {

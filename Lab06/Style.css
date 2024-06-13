@@ -74,15 +74,6 @@ body {
   border-radius: 50%;
   animation: bounce 1s infinite alternate;
 }
-/* 
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(1.1);
-  }
-} */
 
 .modal {
   display: none;
@@ -137,4 +128,10 @@ button:hover {
 
 div > p {
   margin: 10px;
+}
+
+.hole {
+  color: white;
+  text-align: center;
+  font-size: 23px;
 }
