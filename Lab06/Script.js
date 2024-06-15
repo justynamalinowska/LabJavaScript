@@ -13,7 +13,9 @@ const timerElement = document.getElementById("timer");
 const menuPoints = document.getElementById("menuPoints");
 const summaryPoints = document.getElementById("summaryPoints");
 const menu = document.getElementById("menu");
+const rankingDiv = document.getElementById("ranking");
 
+let ranking = [];
 let holes = [];
 let currentHoleIndex;
 let ballX;
@@ -39,9 +41,40 @@ window.addEventListener("DOMContentLoaded", function () {
     summaryModal.classList.remove("visible");
     startNewGame();
   });
+
+  ranking = JSON.parse(localStorage.getItem("rankingArray")) || [];
+  displayRanking();
 });
 
 window.addEventListener("deviceorientation", handleOrientation);
+
+function updateRanking(newTime) {
+  localStorage.removeItem("rankingArray");
+  ranking.push(newTime);
+
+  ranking.sort((a, b) => a - b);
+  localStorage.setItem("rankingArray", JSON.stringify(ranking));
+
+  displayRanking();
+}
+
+function displayRanking() {
+  rankingDiv.innerHTML = "";
+  const title = document.createElement("span");
+  title.innerText = "Ranking";
+  rankingDiv.appendChild(title);
+
+  const len = ranking.length;
+  if (ranking.length > 10) len = 10;
+
+  for (let i = 0; i < len; i++) {
+    const minutes = Math.floor(ranking[i] / 60000);
+    const seconds = Math.floor((ranking[i] % 60000) / 1000);
+    const span = document.createElement("span");
+    span.innerText = `${i + 1}. ${minutes} min ${seconds} sec`;
+    rankingDiv.appendChild(span);
+  }
+}
 
 function handleOrientation(event) {
   ballSpeedX = event.gamma / 40;
@@ -143,6 +176,8 @@ function endGame() {
   gameTime = endTime - startTime;
   summaryPoints.innerText = points;
   summaryModal.classList.add("visible");
+
+  if (points === 5) updateRanking(gameTime);
 
   const minutes = Math.floor(gameTime / 60000);
   const seconds = Math.floor((gameTime % 60000) / 1000);

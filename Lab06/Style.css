@@ -124,6 +124,7 @@ button:hover {
   right: 100px;
   font-size: 50px;
   color: whitesmoke;
+  text-align: center;
 }
 
 div > p {
@@ -131,7 +132,20 @@ div > p {
 }
 
 .hole {
+  display: flex;
   color: white;
-  text-align: center;
+  justify-content: center;
+  align-items: center;
   font-size: 23px;
+}
+
+#ranking {
+  text-transform: uppercase;
+  margin-top: 25px;
+  font-size: 28px;
+}
+
+#ranking > span {
+  display: block;
+  margin-top: 5px;
 }
