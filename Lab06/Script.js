@@ -186,6 +186,7 @@ function endGame() {
 
 function nextRound() {
   points++;
+  randomizeBall();
   const holeToDelete = document.getElementById("hole" + points);
   if (holeToDelete) holeToDelete.remove();
   menuPoints.innerText = points;
